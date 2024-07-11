@@ -27,5 +27,15 @@ Run through the list of the reports and delete any duplicates. Sometimes reports
 Run the PDF Script. This will generate an excel file that records the file name, location, date, url for the pdf and number of reports for that date <br>
 **Examine the excel file that's generated. You will notice that some of files might have a 0 for count. This means that the code did not see any entries on the day of, the day before, or the day after the report was copied. Soemtimes users will generate reports for inventories that were not neccessarily done that day. These can be deleted from the excel file. Another issue is that users can choose their own date format. So for countries that use formats like MM/DD/YY, the code may skip over it. It's probably possible to fix this issue, but for now just investigate the reports that have a 0 count and use your best judgement on whether to keep it or not.** <br>
 
+Copy and paste the newly created cells into the respective Tree's Count or TreeRisk csv. You might need to change the date to Short Date and convert the coordinates to numbers. Save the csv files. <br>
+Open ArcGIS Pro and ensure the TreesCount toolbox is imported with the neccessary scripts<br>
+Run the Trees_Count_Mapper script, importing the respective csv and overwriting the shapefile. <br>
+Share and overwrite the Tree's Count and Tree Risk layers in AGOL. <br>
+Open the instant apps and change the date and number of reports.
+
+Send out the update email with the correct number of reports and date to Mac, Gretchen, Rebekah, Leighton, and CC Brad and Fernando. 
+
+
+
 
 
