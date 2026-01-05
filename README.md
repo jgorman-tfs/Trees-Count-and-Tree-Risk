@@ -26,4 +26,4 @@ If the script did not find any trees in the PDFs, the script will ask you how ma
 MAKE SURE THE LAYER IS LOADED IN THE MAP FROM AGOL.
 Open the instant apps and change the date and number of reports.
 
-Send out the update email with the correct number of reports and date to Mac, Gretchen, Rebekah, Leighton, and CC Brad and Fernando. 
+Send out the update email with the correct number of reports and date to Gretchen, Rebekah, Leighton, Melissa and CC Brad and Fernando. 
