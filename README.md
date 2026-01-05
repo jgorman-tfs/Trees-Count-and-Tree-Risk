@@ -1,6 +1,6 @@
 # Trees-Count-and-Tree-Risk
 This repository contains information related to the monthly report of the Trees Count - Tree Inventory application. <br>
-*Last Updated 9-27-24*
+*Last Updated 1/5/26*
 
 ## Purpose
 Trees Count - Tree Inventory is an app created by Fernando that allows users to mark locations of individual trees, record information about them, and generate reports. When a report is generated in the Trees Count - Tree Inventory application by a user, it will be copied into the sharepoint folder. At the beginning of every month, the Trees Count and Tree Risk instant apps need to be updated with the the reports that were generated. This gives the viewers of the instant apps a sense of where the app is being used and a link to the generated report. <br>
@@ -26,9 +26,4 @@ If the script did not find any trees in the PDFs, the script will ask you how ma
 MAKE SURE THE LAYER IS LOADED IN THE MAP FROM AGOL.
 Open the instant apps and change the date and number of reports.
 
-Send out the update email with the correct number of reports and date to Mac, Gretchen, Rebekah, Leighton, and CC Brad and Fernando. 
-
-Future updates - Update the feature layer directly in AGOL instead of having it loaded in te map
-
-
-
+Send out the update email with the correct number of reports and date to Gretchen, Rebekah, Leighton, Melissa and CC Brad and Fernando. 
