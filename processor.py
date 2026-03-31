@@ -129,12 +129,12 @@ def append_AGOL_layer(df: pd.DataFrame, config: ReportConfig) -> None:
         spatial_ref
     )
 
-    # arcpy.management.Append(
-    #     config.xy_feature,
-    #     config.target_layer,
-    #     "NO_TEST",
-    #     update_geometry="UPDATE_GEOMETRY"
-    # )
+    arcpy.management.Append(
+        config.xy_feature,
+        config.target_layer,
+        "NO_TEST",
+        update_geometry="UPDATE_GEOMETRY"
+    )
 
 
 def process_and_append(config: ReportConfig):
