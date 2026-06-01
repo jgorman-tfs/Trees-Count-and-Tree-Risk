@@ -23,30 +23,62 @@ class ReportConfig:
 def open_file(path):
     os.startfile(path)
 
+def normalize_date(match: str):
+    """
+    Try to convert a matched string into a date object.
+    Returns None if invalid.
+    """
 
-def extract_pdf(config: ReportConfig):
+    # YYYYMMDD
+    if re.fullmatch(r"\d{8}", match):
+        try:
+            return datetime.strptime(match, "%Y%m%d").date()
+        except ValueError:
+            return None
+
+    # M/D/YY or MM/DD/YY or M.D.YY etc.
+    if re.fullmatch(r"\d{1,2}[./]\d{1,2}[./]\d{2,4}", match):
+        sep = "." if "." in match else "/"
+        parts = match.split(sep)
+
+        if len(parts) != 3:
+            return None
+
+        m, d, y = parts
+
+        try:
+            m = int(m)
+            d = int(d)
+            y = int(y)
+
+            # assume 2000s only
+            if y < 100:
+                y += 2000
+
+            return datetime(y, m, d).date()
+        except ValueError:
+            return None
+
+    return None
+
+
+def extract_pdf(config: "ReportConfig"):
     data = []
+
+    float_pattern = r"-?\d{1,3}\.\d{3,}"
+    date_pattern = r"\b\d{8}\b|\b\d{1,2}[./]\d{1,2}[./]\d{2,4}\b"
 
     for pdf_file_path in config.pdf_dir.glob("*.pdf"):
         with pdfplumber.open(pdf_file_path) as pdf:
+
             file_name = pdf_file_path.name
             file_name_sharepoint = f"<a href='{config.base_url}{file_name}'>Click Here</a>"
 
-            file_date = file_name[:8]
-            date_object = datetime.strptime(file_date, "%Y%m%d").date()
-            day_before = date_object - timedelta(days=1)
+            file_date = datetime.strptime(file_name[:8], "%Y%m%d").date()
 
-            month = date_object.strftime("%m").lstrip("0")
-            day = date_object.strftime("%d").lstrip("0")
-            date_string = f"{month}/{day}"
-            backwards_date_string = f"{day}/{month}"
+            target_year = file_date.year
+            target_month = file_date.month
 
-            month_daybefore = day_before.strftime("%m").lstrip("0")
-            day_daybefore = day_before.strftime("%d").lstrip("0")
-            day_before_string = f"{month_daybefore}/{day_daybefore}"
-            backwards_day_before_string = f"{day_daybefore}/{month_daybefore}"
-
-            float_pattern = r"-?\d{1,3}\.\d{3,}"
             count = 0
             first_float = None
             second_float = None
@@ -54,15 +86,18 @@ def extract_pdf(config: ReportConfig):
             for page in pdf.pages:
                 text = page.extract_text() or ""
 
-                if date_string in text:
-                    count += text.count(date_string)
-                elif count == 0 and day_before_string in text:
-                    count += text.count(day_before_string)
-                elif count == 0 and backwards_date_string in text:
-                    count += text.count(backwards_date_string)
-                elif count == 0 and backwards_day_before_string in text:
-                    count += text.count(backwards_day_before_string)
+                # ---- DATE MATCHING LOGIC ----
+                candidates = re.findall(date_pattern, text)
 
+                for c in candidates:
+                    parsed = normalize_date(c)
+                    if not parsed:
+                        continue
+
+                    if parsed.year == target_year and parsed.month == target_month:
+                        count += 1
+
+                # ---- FLOAT EXTRACTION (unchanged logic) ----
                 if page.page_number == 2:
                     float_matches = re.findall(float_pattern, text)
                     if len(float_matches) >= 2:
@@ -70,7 +105,7 @@ def extract_pdf(config: ReportConfig):
                         second_float = float_matches[1]
 
             data.append({
-                "DateSub": date_object,
+                "DateSub": file_date,
                 "Trees": count,
                 "Xcoord": second_float,
                 "Ycoord": first_float,
